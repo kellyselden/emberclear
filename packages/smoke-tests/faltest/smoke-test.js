@@ -52,9 +52,10 @@ describe('smoke', function() {
       await browser.setValue('textarea', message);
 
       // This is only necessary for CI, but not sure why.
-      // await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      await browser.click('[value="Send"]');
+      // TODO: this will be changed to a button soon, instead of an input
+      await browser.click('.chat-entry-container input[type="submit"]');
     };
 
     this.waitForResponse = async function waitForResponse(browser, user) {
