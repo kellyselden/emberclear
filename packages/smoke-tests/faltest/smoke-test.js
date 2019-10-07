@@ -1,35 +1,19 @@
 'use strict';
 
 const { setUpWebDriver } = require('@faltest/lifecycle');
-const execa = require('execa');
 const assert = require('assert');
-const path = require('path');
 
-const distLocation = path.join('..', 'frontend', 'dist');
+const { startServer } = require('./helpers/start-server');
 
 describe('smoke', function() {
   setUpWebDriver.call(this, {
     overrides: {
-      browsers: 2
-    }
+      browsers: 2,
+    },
   });
 
   before(async function() {
-    this.server = execa('http-server', [distLocation], {
-      preferLocal: true,
-    });
-
-    this.port = await new Promise(resolve => {
-      this.server.stdout.on('data', data => {
-        let str = data.toString();
-        let matches = str.match(/http:\/\/127\.0\.0\.1:(\d+)$/m);
-        if (matches) {
-          let port = parseInt(matches[1]);
-
-          resolve(port);
-        }
-      });
-    });
+    this.server = await startServer();
 
     this.logIn = async function logIn(browser, user) {
       await browser.url(`http://localhost:${this.port}`);
@@ -96,13 +80,15 @@ describe('smoke', function() {
     let users = [
       {
         name: 'jRA0gfR7',
-        mnemonic: 'assist lounge buyer clump marble vital check ordinary liar resemble fantasy vapor snow stool myth mention mention ask tiger video ball suspect lens above loan',
+        mnemonic:
+          'assist lounge buyer clump marble vital check ordinary liar resemble fantasy vapor snow stool myth mention mention ask tiger video ball suspect lens above loan',
         message: 'Hello Browser 2!',
         publicKey: 'b4645cdeec6889d7515aeadab66b2b4fd0fbac5751f701e0289a1add7822a739',
       },
       {
         name: 'SpxDqBPG',
-        mnemonic: 'glimpse moment duck pigeon awake gossip burger repair dizzy employ diary merge swarm select very liar rail exhibit space runway face inhale absorb able trigger',
+        mnemonic:
+          'glimpse moment duck pigeon awake gossip burger repair dizzy employ diary merge swarm select very liar rail exhibit space runway face inhale absorb able trigger',
         message: 'Hello Browser 1!',
         publicKey: 'e3ab4b615a00cacbd44d498cdc4d880bb484e2e6e0b1b02bbf3d393c12183047',
       },
