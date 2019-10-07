@@ -8,19 +8,20 @@ async function startServer() {
     preferLocal: true,
   });
 
-  this.port = await new Promise(resolve => {
-    this.server.stdout.on('data', data => {
+  let port = await new Promise(resolve => {
+    server.stdout.on('data', data => {
       let str = data.toString();
       let matches = str.match(/http:\/\/127\.0\.0\.1:(\d+)$/m);
-      if (matches) {
-        let port = parseInt(matches[1]);
 
-        resolve(port);
+      if (matches) {
+        let currentPort = parseInt(matches[1]);
+
+        resolve(currentPort);
       }
     });
-
-    return server;
   });
+
+  return { server, port };
 }
 
 module.exports = {

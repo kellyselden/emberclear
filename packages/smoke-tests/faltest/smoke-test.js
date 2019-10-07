@@ -13,7 +13,10 @@ describe('smoke', function() {
   });
 
   before(async function() {
-    this.server = await startServer();
+    let serverInfo = await startServer();
+
+    this.server = serverInfo.server;
+    this.port = serverInfo.port;
 
     this.logIn = async function logIn(browser, user) {
       await browser.url(`http://localhost:${this.port}`);
@@ -49,7 +52,7 @@ describe('smoke', function() {
       await browser.setValue('textarea', message);
 
       // This is only necessary for CI, but not sure why.
-      await new Promise(resolve => setTimeout(resolve, 30 * 1000));
+      // await new Promise(resolve => setTimeout(resolve, 30 * 1000));
 
       await browser.click('[value="Send"]');
     };
